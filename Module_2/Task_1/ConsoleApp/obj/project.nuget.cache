@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "qUsYjYULBDuZGPrV3mdwnY/x7DHnNCjCwsQ9I35AuKuo0GFNLRB7KEld5G71PUDi0GfqcWrGxrnq827BwEnrbQ==",
+  "success": true,
+  "projectFilePath": "C:\\Developers_Corse\\Module_2\\Task_1\\ConsoleApp\\ConsoleApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Anastasiya_Korsak\\.nuget\\packages\\microsoft.extensions.configuration\\5.0.0\\microsoft.extensions.configuration.5.0.0.nupkg.sha512",
+    "C:\\Users\\Anastasiya_Korsak\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\5.0.0\\microsoft.extensions.configuration.abstractions.5.0.0.nupkg.sha512",
+    "C:\\Users\\Anastasiya_Korsak\\.nuget\\packages\\microsoft.extensions.configuration.commandline\\5.0.0\\microsoft.extensions.configuration.commandline.5.0.0.nupkg.sha512",
+    "C:\\Users\\Anastasiya_Korsak\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.0\\microsoft.extensions.primitives.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
