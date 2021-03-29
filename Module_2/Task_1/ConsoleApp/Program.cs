@@ -18,7 +18,9 @@ namespace ConsoleApp
 
             var name = config["Name"];
 
-            Console.WriteLine($"Hello {name}!");
+            var printLine = HelloLibrary.HelloClass.HelloMethod(name);
+
+            Console.WriteLine(printLine);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using HelloLibrary;
 
 namespace Task1
 {
@@ -14,7 +15,9 @@ namespace Task1
         {
             var name = this.textBox1.Text;
 
-            MessageBox.Show($"Hello {name}!");
+            var printLine = HelloClass.HelloMethod(name);
+
+            MessageBox.Show(printLine);
         }
     }
 }
