@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.CommandLine;
 
 namespace ConsoleApp
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = new ConfigurationBuilder();
-            builder.AddCommandLine(args, new Dictionary<string, string>{
+            builder.AddCommandLine(args, new Dictionary<string, string>
+            {
                 ["-Name"] = "Name"
             });
 

@@ -13,7 +13,7 @@ namespace Task1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var name = this.textBox1.Text;
+            var name = textBox1.Text;
 
             var printLine = HelloClass.HelloMethod(name);
 
