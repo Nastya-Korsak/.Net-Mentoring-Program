@@ -15,7 +15,7 @@ namespace Task1
         {
             var name = textBox1.Text;
 
-            var printLine = HelloClass.HelloMethod(name);
+            var printLine = WelcomeMessage.GetWelcomeMessage(name);
 
             MessageBox.Show(printLine);
         }

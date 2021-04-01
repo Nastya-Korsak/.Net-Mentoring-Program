@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HelloLibrary;
 using Microsoft.Extensions.Configuration;
 
 namespace ConsoleApp
@@ -18,7 +19,7 @@ namespace ConsoleApp
 
             var name = config["Name"];
 
-            var printLine = HelloLibrary.HelloClass.HelloMethod(name);
+            var printLine = WelcomeMessage.GetWelcomeMessage(name);
 
             Console.WriteLine(printLine);
         }
