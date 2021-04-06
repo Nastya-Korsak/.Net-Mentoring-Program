@@ -12,17 +12,16 @@ namespace Task1
         {
             if (numbers == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(numbers));
             }
 
-            int temp;
             for (int i = 0; i < numbers.Length; i++)
             {
                 for (int j = i; j < numbers.Length; j++)
                 {
                     if (numbers[i] > numbers[j])
                     {
-                        temp = numbers[i];
+                        int temp = numbers[i];
                         numbers[i] = numbers[j];
                         numbers[j] = temp;
                     }
@@ -31,7 +30,7 @@ namespace Task1
         }
 
         /// <summary>
-        /// Searches for the index of a product in an <paramref name="products"/> 
+        /// Searches for the index of a product in an <paramref name="products"/>
         /// based on a <paramref name="predicate"/>.
         /// </summary>
         /// <param name="products">Products used for searching.</param>
@@ -40,9 +39,14 @@ namespace Task1
         /// otherwise -1.</returns>
         public static int IndexOf(Product[] products, Predicate<Product> predicate)
         {
-            if (products == null || predicate == null)
+            if (products == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(products));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             for (int i = 0; i < products.Length; i++)

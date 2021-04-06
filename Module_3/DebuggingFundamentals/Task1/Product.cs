@@ -2,7 +2,7 @@
 
 namespace Task1
 {
-    public class Product
+    public class Product : IEquatable<Product>
     {
         public Product(string name, double price)
         {
