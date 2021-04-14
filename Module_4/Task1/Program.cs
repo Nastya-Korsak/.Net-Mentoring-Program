@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Abstractions;
 using FileSystemVisitorLibrary;
 
 namespace Task1
@@ -10,9 +11,9 @@ namespace Task1
         {
             var path = args.Length > 0 && Directory.Exists(args[0]) ? args[0] : Directory.GetCurrentDirectory();
 
-            Func<FileSystemInfo, bool> filter = (FileSystemInfo e) => e.Extension == ".png";
+            Func<FileSystemInfo, bool> filter = (FileSystemInfo e) => e.Extension == ".json";
 
-            var visitor = new FileSystemVisitor(filter);
+            var visitor = new FileSystemVisitor(new FileSystem(), filter);
 
             visitor.Started += () => Console.WriteLine($"Search started! Entry point {path}");
             visitor.Complited += () => Console.WriteLine($"Search finished!");
