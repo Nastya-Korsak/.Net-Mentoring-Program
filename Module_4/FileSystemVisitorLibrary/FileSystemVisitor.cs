@@ -2,152 +2,187 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 
 namespace FileSystemVisitorLibrary
 {
     public class FileSystemVisitor
     {
-        private readonly Func<FileSystemInfo, bool> _filterFunc;
+        private readonly Func<IFileSystemInfo, bool> _filter;
 
         private readonly IFileSystem _fileSystem;
 
-        private Actions? _action = Actions.Continue;
-
-        public FileSystemVisitor(IFileSystem fileSystem, Func<FileSystemInfo, bool> filterFunc = null)
+        public FileSystemVisitor(IFileSystem fileSystem, Func<IFileSystemInfo, bool> filter = null)
         {
-            _fileSystem = fileSystem;
-            _filterFunc = filterFunc;
+            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+            _filter = filter;
         }
 
         public event Action Started;
 
-        public event Action Complited;
+        public event Action Completed;
 
-        public event Func<FileSystemInfo, Actions> FileFound;
+        public event Action<SearchEventArgs> FileFound;
 
-        public event Func<FileSystemInfo, Actions> DirectoryFound;
+        public event Action<SearchEventArgs> DirectoryFound;
 
-        public event Func<FileSystemInfo, Actions> FilteredFileFound;
+        public event Action<SearchEventArgs> FilteredFileFound;
 
-        public event Func<FileSystemInfo, Actions> FilteredDirectoryFound;
+        public event Action<SearchEventArgs> FilteredDirectoryFound;
+
+        public SearchAcions? SearchAcion { get; set; }
 
         public IEnumerable<string> Search(string path)
         {
-            if (path == null)
+            if (string.IsNullOrEmpty(path))
             {
-                throw new ArgumentNullException(path, "Directory path is null");
+                throw new ArgumentException($"'{nameof(path)}' cannot be null or empty.", nameof(path));
             }
 
-            if (path == string.Empty)
+            var directory = _fileSystem.DirectoryInfo.FromDirectoryName(path);
+
+            if (!directory.Exists)
             {
-                throw new ArgumentException("Directory path is empty", path);
+                throw new DirectoryNotFoundException($"Selected directory is not exist: {path}");
             }
 
-            if (!_fileSystem.Directory.Exists(path))
-            {
-                throw new ArgumentException("Selected directory is not exist", path);
-            }
-
+            SearchAcion = SearchAcions.Continue;
             Started?.Invoke();
 
-            foreach (var f in FileSearch(path))
+            foreach (var info in Search(directory))
             {
-                yield return f;
+                yield return info.FullName;
             }
 
-            foreach (var d in DirectionSearch(path))
-            {
-                yield return d;
-            }
-
-            Complited?.Invoke();
+            Completed?.Invoke();
+            SearchAcion = SearchAcions.Stop;
         }
 
-        private IEnumerable<string> FileSearch(string path)
+        private IEnumerable<IFileSystemInfo> Search(IFileSystemInfo info)
         {
-            if (_action == Actions.Stop)
+            foreach (var fileInfo in FileSearch(info))
+            {
+                yield return fileInfo;
+            }
+
+            foreach (var directoryInfo in DirectionSearch(info))
+            {
+                yield return directoryInfo;
+            }
+        }
+
+        private IEnumerable<IFileSystemInfo> FileSearch(IFileSystemInfo root)
+        {
+            if (SearchAcion == SearchAcions.Stop)
             {
                 yield break;
             }
 
-            foreach (var f in _fileSystem.Directory.EnumerateFiles(path).Where(f => _filterFunc == null || !_filterFunc(new FileInfo(f))))
+            foreach (var filePath in _fileSystem.Directory.EnumerateFiles(root.FullName))
             {
-                var fileInfo = new FileInfo(f);
+                var fileInfo = _fileSystem.FileInfo.FromFileName(filePath);
 
-                if (_filterFunc == null && FileFound != null)
+                var isFiltered = _filter?.Invoke(fileInfo) ?? false;
+
+                if (isFiltered)
                 {
-                    _action = FileFound.Invoke(fileInfo);
+                    SearchAcion = SearchAcions.Skip;
+                    FoudEventExecution(FilteredFileFound, fileInfo);
                 }
-                else if (FilteredFileFound != null)
+                else
                 {
-                    _action = FilteredFileFound.Invoke(fileInfo);
+                    FoudEventExecution(FileFound, fileInfo);
                 }
 
-                switch (_action)
+                switch (SearchAcion)
                 {
-                    case Actions.Continue:
-                        yield return f;
+                    case SearchAcions.Continue:
+                        yield return fileInfo;
                         break;
-                    case Actions.Skip:
-                        _action = Actions.Continue;
+                    case SearchAcions.Skip:
+                        SearchAcion = SearchAcions.Continue;
                         continue;
-                    case Actions.Stop:
-                        yield return f;
+                    case SearchAcions.Stop:
+                        yield return fileInfo;
                         yield break;
-                }
-            }
-
-            foreach (var d in _fileSystem.Directory.EnumerateDirectories(path))
-            {
-                foreach (var f in FileSearch(d))
-                {
-                    yield return f;
                 }
             }
         }
 
-        private IEnumerable<string> DirectionSearch(string path)
+        private IEnumerable<IFileSystemInfo> DirectionSearch(IFileSystemInfo root)
         {
-            if (_action == Actions.Stop)
+            if (SearchAcion == SearchAcions.Stop)
             {
                 yield break;
             }
 
-            foreach (var f in _fileSystem.Directory.EnumerateDirectories(path).Where(f => _filterFunc == null || !_filterFunc(new FileInfo(f))))
+            foreach (var directoryPath in _fileSystem.Directory.EnumerateDirectories(root.FullName))
             {
-                var fileInfo = new FileInfo(f);
-
-                if (_filterFunc == null && DirectoryFound != null)
+                if (SearchAcion == SearchAcions.Stop)
                 {
-                    _action = DirectoryFound?.Invoke(fileInfo);
-                }
-                else if (FilteredDirectoryFound != null)
-                {
-                    _action = FilteredDirectoryFound?.Invoke(fileInfo);
+                    yield break;
                 }
 
-                switch (_action)
+                var directoryInfo = _fileSystem.DirectoryInfo.FromDirectoryName(directoryPath);
+
+                var isFiltered = _filter?.Invoke(directoryInfo) ?? false;
+
+                var isFilterSkip = false;
+
+                if (isFiltered)
                 {
-                    case Actions.Continue:
-                        yield return f;
+                    SearchAcion = null;
+                    FoudEventExecution(FilteredDirectoryFound, directoryInfo);
+
+                    if (SearchAcion == null)
+                    {
+                        SearchAcion = SearchAcions.Skip;
+                        isFilterSkip = true;
+                    }
+                }
+                else
+                {
+                    FoudEventExecution(DirectoryFound, directoryInfo);
+                }
+
+                switch (SearchAcion)
+                {
+                    case SearchAcions.Continue:
+                        yield return directoryInfo;
                         break;
-                    case Actions.Skip:
-                        _action = Actions.Continue;
-                        continue;
-                    case Actions.Stop:
-                        yield return f;
+                    case SearchAcions.Skip:
+                        {
+                            SearchAcion = SearchAcions.Continue;
+                            if (!isFilterSkip)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                    case SearchAcions.Stop:
+                        yield return directoryInfo;
                         yield break;
                 }
-            }
 
-            foreach (var d in _fileSystem.Directory.EnumerateDirectories(path))
-            {
-                foreach (var f in DirectionSearch(d))
+                foreach (var fileInfo in Search(directoryInfo))
                 {
-                    yield return f;
+                    yield return fileInfo;
                 }
             }
+        }
+
+        private void FoudEventExecution(Action<SearchEventArgs> foudEvent, IFileSystemInfo info)
+        {
+            var args = new SearchEventArgs(
+                info,
+                stop: () => SearchAcion = SearchAcions.Stop,
+                skip: () => SearchAcion = SearchAcions.Skip,
+                @continue: () => SearchAcion = SearchAcions.Continue);
+
+            foudEvent?.Invoke(args);
         }
     }
 }

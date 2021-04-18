@@ -11,28 +11,24 @@ namespace Task1
         {
             var path = args.Length > 0 && Directory.Exists(args[0]) ? args[0] : Directory.GetCurrentDirectory();
 
-            Func<FileSystemInfo, bool> filter = (FileSystemInfo e) => e.Extension == ".json";
+            Func<IFileSystemInfo, bool> filter = (IFileSystemInfo e) => e.Extension == ".dll";
 
             var visitor = new FileSystemVisitor(new FileSystem(), filter);
 
             visitor.Started += () => Console.WriteLine($"Search started! Entry point {path}");
-            visitor.Complited += () => Console.WriteLine($"Search finished!");
+            visitor.Completed += () => Console.WriteLine($"Search finished!");
 
-            visitor.FilteredFileFound += (FileSystemInfo e) =>
+            visitor.FilteredFileFound += e =>
             {
-                if (e.Name.Contains("Screenshot"))
+                if (e.Info.Name == "Task1.dll")
                 {
-                    return Actions.Skip;
-                }
-                else
-                {
-                    return Actions.Continue;
+                    e.Stop();
                 }
             };
 
             foreach (var f in visitor.Search(path))
             {
-                Console.WriteLine(f.Substring(path.Length));
+                Console.WriteLine(f[path.Length..]);
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace FileSystemVisitorLibrary
 {
-    public enum Actions
+    public enum SearchAcions
     {
         Skip,
         Continue,
