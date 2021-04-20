@@ -14,7 +14,7 @@ namespace Task2
 
             if (!int.TryParse(stringValue, out var result))
             {
-                if (IsStringDigit(stringValue))
+                if (IsStringNumber(stringValue))
                 {
                     throw new OverflowException(nameof(stringValue));
                 }
@@ -27,7 +27,7 @@ namespace Task2
             return result;
         }
 
-        private bool IsStringDigit(string stringValue)
+        private bool IsStringNumber(string stringValue)
         {
             if (string.IsNullOrWhiteSpace(stringValue))
             {

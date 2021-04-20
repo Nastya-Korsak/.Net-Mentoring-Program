@@ -6,7 +6,7 @@ namespace Task1
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Application have started.");
+            Console.WriteLine($"Application started.{Environment.NewLine}");
 
             try
             {
@@ -26,7 +26,7 @@ namespace Task1
                 Console.WriteLine(ex.Message);
             }
 
-            Console.WriteLine("Application have finished.");
+            Console.WriteLine($"{Environment.NewLine}Application finished.");
         }
     }
 }
