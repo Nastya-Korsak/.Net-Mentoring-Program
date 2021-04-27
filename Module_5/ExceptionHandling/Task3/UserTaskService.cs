@@ -22,7 +22,7 @@ namespace Task3
             var user = _userDao.GetUser(userId);
             if (user == null)
             {
-                throw new ArgumentNullException(message: "User not found", null);
+                throw new UserNotFoundException(message: "User not found");
             }
 
             var tasks = user.Tasks;

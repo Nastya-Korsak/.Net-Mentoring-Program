@@ -9,11 +9,21 @@ namespace Task3
 
         public UserTaskController(IUserTaskService taskService)
         {
-            _taskService = taskService;
+            _taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
         }
 
         public bool AddTaskForUser(int userId, string description, IResponseModel model)
         {
+            if (string.IsNullOrEmpty(description))
+            {
+                throw new ArgumentException($"'{nameof(description)}' cannot be null or empty.", nameof(description));
+            }
+
+            if (model is null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
             string message = GetMessageForModel(userId, description);
             if (message != null)
             {
@@ -31,7 +41,7 @@ namespace Task3
                 var task = new UserTask(description);
                 _taskService.AddTaskForUser(userId, task);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is UserNotFoundException)
             {
                 return ex.Message;
             }
