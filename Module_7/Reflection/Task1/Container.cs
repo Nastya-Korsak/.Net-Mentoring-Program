@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Task1.DoNotChange;
 
 namespace Task1
 {
     public class Container
     {
-        private readonly Dictionary<Type, Func<object>> types = new Dictionary<Type, Func<object>>();
-        private readonly Dictionary<Type, object> typesWithInstances = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, Func<object>> _types = new Dictionary<Type, Func<object>>();
+        private readonly Dictionary<Type, object> _typesWithInstances = new Dictionary<Type, object>();
+        private readonly HashSet<Assembly> _assemblies = new HashSet<Assembly>();
 
         public void AddAssembly(Assembly assembly)
         {
@@ -16,6 +18,38 @@ namespace Task1
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
+
+            if (_assemblies.Contains(assembly))
+            {
+                throw new DuplicateWaitObjectException(nameof(assembly), "This assembly is already added");
+            }
+
+            _assemblies.Add(assembly);
+
+            var types = assembly
+                .DefinedTypes
+                .GroupBy(type => CheckTypeOnExportAttribute(type) ? "ExportAttribute" :
+                (CheckTypeOnImportConstructorAttribute(type) || CheckTypeOnImportAttribute(type)) ? "ImportAttribute" : string.Empty)
+                .ToList();
+
+            var typesWithExportAttribute = types
+                .Single(t => t.Key == "ExportAttribute")
+                .GroupBy(t => ((ExportAttribute)t.GetCustomAttribute(typeof(ExportAttribute))).Contract == null);
+
+            typesWithExportAttribute
+                .Single(t => t.Key == true)
+                .ToList()
+                .ForEach(t => AddType(t));
+
+            typesWithExportAttribute
+                .Single(t => t.Key == false)
+                .ToList()
+                .ForEach(t => AddType(t, ((ExportAttribute)t.GetCustomAttribute(typeof(ExportAttribute))).Contract));
+
+            types
+                .Single(t => t.Key == "ImportAttribute")
+                .ToList()
+                .ForEach(t => AddType(t));
         }
 
         public void AddType(Type type)
@@ -35,12 +69,22 @@ namespace Task1
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (!(type.BaseType == baseType) && !(type == baseType) && (!type.GetInterfaces().Contains(baseType)))
+            if (type.IsAbstract || type.IsInterface)
             {
-                throw new Exception();
+                throw new ArgumentException("Type is abstract class or interface", nameof(type));
             }
 
-            types.Add(baseType, () => GetInstanceWithImportPublicFields(type));
+            if (!(type.BaseType == baseType) && !(type == baseType) && (!type.GetInterfaces().Contains(baseType)))
+            {
+                throw new InvalidCastException("Base type is not tied with type");
+            }
+
+            _types.Add(baseType, () => GetInstanceWithFilledPublicFieldsThatHaveAttribute(type));
+
+            if (baseType != type)
+            {
+                _types.Add(type, () => GetInstanceWithFilledPublicFieldsThatHaveAttribute(type));
+            }
         }
 
         public T Get<T>()
@@ -49,7 +93,7 @@ namespace Task1
 
             if (result == (object)default(T))
             {
-                throw new Exception("Type was not added to container");
+                throw new InvalidOperationException("Type was not added to container");
             }
 
             return (T)result;
@@ -57,20 +101,41 @@ namespace Task1
 
         private object GetInstance(Type type)
         {
-            if (typesWithInstances.TryGetValue(type, out var instance))
+            if (_typesWithInstances.TryGetValue(type, out var instance))
             {
                 return instance;
-            };
+            }
 
-            if (types.TryGetValue(type, out var instanceFunc))
+            if (_types.TryGetValue(type, out var instanceFunc))
             {
                 return instanceFunc.Invoke();
-            };
+            }
 
-            return GetDefaultValue(type);
+            // Exception has been added and return has been commented because of
+            // Test 'AddAssembly_AssemblyWithNotEnoughDependencies_ThrowsError' in class 'ContainerTestsComplex'
+            throw new KeyNotFoundException("Type was not added to container");
+
+            // return GetDefaultValue(type);
         }
 
-        private object GetInstanceWithImportConstructor(Type type)
+        private object GetInstanceWithFilledPublicFieldsThatHaveAttribute(Type type)
+        {
+            var instance = CreateInstance(type);
+
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var property in properties)
+            {
+                if (property.CustomAttributes.Any(a => a.AttributeType == typeof(ImportAttribute)))
+                {
+                    property.SetValue(instance, GetInstance(property.PropertyType));
+                }
+            }
+
+            return instance;
+        }
+
+        private object CreateInstance(Type type)
         {
             object[] parameters;
             var constructors = type.GetConstructors().Single();
@@ -82,24 +147,7 @@ namespace Task1
 
             var instance = Activator.CreateInstance(type, parameters);
 
-            typesWithInstances.Add(type, instance);
-
-            return instance;
-        }
-
-        private object GetInstanceWithImportPublicFields(Type type)
-        {
-            var instance = GetInstanceWithImportConstructor(type);
-
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (var property in properties)
-            {
-                if (property.GetCustomAttributes().Select(a => a.GetType().Name).ToList().Contains("ImportAttribute"))
-                {
-                    property.SetValue(instance, GetInstance(property.PropertyType));
-                }
-            }
+            _typesWithInstances.Add(type, instance);
 
             return instance;
         }
@@ -113,5 +161,13 @@ namespace Task1
 
             return null;
         }
+
+        private bool CheckTypeOnExportAttribute(Type type) => type.CustomAttributes.Any(a => a.AttributeType == typeof(ExportAttribute));
+
+        private bool CheckTypeOnImportConstructorAttribute(Type type) => type.CustomAttributes.Any(a => a.AttributeType == typeof(ImportConstructorAttribute));
+
+        private bool CheckTypeOnImportAttribute(Type type) => type
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Any(property => property.CustomAttributes.Any(a => a.AttributeType == typeof(ImportAttribute)));
     }
 }

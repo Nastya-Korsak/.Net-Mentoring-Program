@@ -1,4 +1,4 @@
-using NUnit.Framework;
+Ôªøusing NUnit.Framework;
 using System.Reflection;
 using Task1.Tests.Entities;
 
@@ -44,10 +44,10 @@ namespace Task1.Tests
             container.AddType(typeof(Logger));
             container.AddType(typeof(CustomerBLL));
 
-            var ÒustomerBLL = container.Get<CustomerBLL>();
+            var —ÅustomerBLL = container.Get<CustomerBLL>();
 
-            Assert.That(ÒustomerBLL, Is.Not.Null);
-            Assert.That(ÒustomerBLL, Is.InstanceOf<CustomerBLL>());
+            Assert.That(—ÅustomerBLL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL, Is.InstanceOf<CustomerBLL>());
         }
 
         [Test]
@@ -57,14 +57,14 @@ namespace Task1.Tests
             container.AddType(typeof(Logger));
             container.AddType(typeof(CustomerBLL2));
 
-            var ÒustomerBLL = container.Get<CustomerBLL2>();
+            var —ÅustomerBLL = container.Get<CustomerBLL2>();
 
-            Assert.That(ÒustomerBLL, Is.Not.Null);
-            Assert.That(ÒustomerBLL, Is.InstanceOf<CustomerBLL2>());
-            Assert.That(ÒustomerBLL.CustomerDAL, Is.Not.Null);
-            Assert.That(ÒustomerBLL.CustomerDAL, Is.InstanceOf<ICustomerDAL>());
-            Assert.That(ÒustomerBLL.Logger, Is.Not.Null);
-            Assert.That(ÒustomerBLL.Logger, Is.InstanceOf<Logger>());
+            Assert.That(—ÅustomerBLL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL, Is.InstanceOf<CustomerBLL2>());
+            Assert.That(—ÅustomerBLL.CustomerDAL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL.CustomerDAL, Is.InstanceOf<ICustomerDAL>());
+            Assert.That(—ÅustomerBLL.Logger, Is.Not.Null);
+            Assert.That(—ÅustomerBLL.Logger, Is.InstanceOf<Logger>());
         }
 
         [Test]
@@ -98,10 +98,10 @@ namespace Task1.Tests
         {
             container.AddAssembly(Assembly.GetExecutingAssembly());
 
-            var ÒustomerBLL = container.Get<CustomerBLL>();
+            var —ÅustomerBLL = container.Get<CustomerBLL>();
 
-            Assert.That(ÒustomerBLL, Is.Not.Null);
-            Assert.That(ÒustomerBLL, Is.InstanceOf<CustomerBLL>());
+            Assert.That(—ÅustomerBLL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL, Is.InstanceOf<CustomerBLL>());
         }
 
         [Test]
@@ -109,14 +109,14 @@ namespace Task1.Tests
         {
             container.AddAssembly(Assembly.GetExecutingAssembly());
 
-            var ÒustomerBLL = container.Get<CustomerBLL2>();
+            var —ÅustomerBLL = container.Get<CustomerBLL2>();
 
-            Assert.That(ÒustomerBLL, Is.Not.Null);
-            Assert.That(ÒustomerBLL, Is.InstanceOf<CustomerBLL2>());
-            Assert.That(ÒustomerBLL.CustomerDAL, Is.Not.Null);
-            Assert.That(ÒustomerBLL.CustomerDAL, Is.InstanceOf<ICustomerDAL>());
-            Assert.That(ÒustomerBLL.Logger, Is.Not.Null);
-            Assert.That(ÒustomerBLL.Logger, Is.InstanceOf<Logger>());
+            Assert.That(—ÅustomerBLL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL, Is.InstanceOf<CustomerBLL2>());
+            Assert.That(—ÅustomerBLL.CustomerDAL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL.CustomerDAL, Is.InstanceOf<ICustomerDAL>());
+            Assert.That(—ÅustomerBLL.Logger, Is.Not.Null);
+            Assert.That(—ÅustomerBLL.Logger, Is.InstanceOf<Logger>());
         }
 
         [Test]
@@ -124,10 +124,10 @@ namespace Task1.Tests
         {
             container.AddAssembly(Assembly.GetExecutingAssembly());
 
-            var ÒustomerBLL = container.Get<Logger>();
+            var —ÅustomerBLL = container.Get<Logger>();
 
-            Assert.That(ÒustomerBLL, Is.Not.Null);
-            Assert.That(ÒustomerBLL, Is.InstanceOf<Logger>());
+            Assert.That(—ÅustomerBLL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL, Is.InstanceOf<Logger>());
         }
 
         [Test]
@@ -135,10 +135,10 @@ namespace Task1.Tests
         {
             container.AddAssembly(Assembly.GetExecutingAssembly());
 
-            var ÒustomerBLL = container.Get<ICustomerDAL>();
+            var —ÅustomerBLL = container.Get<ICustomerDAL>();
 
-            Assert.That(ÒustomerBLL, Is.Not.Null);
-            Assert.That(ÒustomerBLL, Is.InstanceOf<ICustomerDAL>());
+            Assert.That(—ÅustomerBLL, Is.Not.Null);
+            Assert.That(—ÅustomerBLL, Is.InstanceOf<ICustomerDAL>());
         }
     }
 }
