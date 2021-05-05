@@ -16,8 +16,6 @@ namespace Task1
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-
-            
         }
 
         public void AddType(Type type)
