@@ -84,7 +84,7 @@ namespace Task1
             }
 
             return customers
-                .Where(customer => customer.Orders.Count() > 0)
+                .Where(customer => customer.Orders.Any())
                 .Select(customer => (customer, customer.Orders.Min(o => o.OrderDate)));
         }
 
@@ -170,7 +170,7 @@ namespace Task1
                 (city, customers) =>
                     (
                         city,
-                        (int)Math.Round(customers.Sum(customer => customer.Orders.Sum(o => o.Total)) / customers.Count()),
+                        (int)Math.Round(customers.Average(customer => customer.Orders.Sum(o => o.Total))),
                         customers.Sum(customer => customer.Orders.Count()) / customers.Count()
                 ));
         }
