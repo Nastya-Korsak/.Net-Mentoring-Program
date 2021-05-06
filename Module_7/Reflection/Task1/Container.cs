@@ -71,7 +71,7 @@ namespace Task1
 
             if (type.IsAbstract || type.IsInterface)
             {
-                throw new ArgumentException("Type is abstract class or interface", nameof(type));
+                throw new ArgumentException("Type cannot be abstract class or interface", nameof(type));
             }
 
             if (!(type.BaseType == baseType) && !(type == baseType) && (!type.GetInterfaces().Contains(baseType)))
@@ -93,7 +93,7 @@ namespace Task1
 
             if (result == (object)default(T))
             {
-                throw new InvalidOperationException("Type was not added to container");
+                throw new InvalidOperationException("Type is not added to container");
             }
 
             return (T)result;
@@ -113,7 +113,7 @@ namespace Task1
 
             // Exception has been added and return has been commented because of
             // Test 'AddAssembly_AssemblyWithNotEnoughDependencies_ThrowsError' in class 'ContainerTestsComplex'
-            throw new KeyNotFoundException("Type was not added to container");
+            throw new KeyNotFoundException("Type is not added to container");
 
             // return GetDefaultValue(type);
         }
