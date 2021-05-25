@@ -40,27 +40,27 @@ namespace Task1
 
                 if (typesWithExportAttribute.Any(t => t.Key == true))
                 {
-                    typesWithExportAttribute
-                    .Single(t => t.Key == true)
-                    .ToList()
-                    .ForEach(t => AddType(t));
+                    foreach (var type in typesWithExportAttribute.Single(t => t.Key == true))
+                    {
+                        AddType(type);
+                    }
                 }
 
                 if (typesWithExportAttribute.Any(t => t.Key == false))
                 {
-                    typesWithExportAttribute
-                    .Single(t => t.Key == false)
-                    .ToList()
-                    .ForEach(t => AddType(t, ((ExportAttribute)t.GetCustomAttribute(typeof(ExportAttribute))).Contract));
+                    foreach (var type in typesWithExportAttribute.Single(t => t.Key == false))
+                    {
+                        AddType(type, ((ExportAttribute)type.GetCustomAttribute(typeof(ExportAttribute))).Contract);
+                    }
                 }
             }
 
             if (types.Any(t => t.Key == "ImportAttribute"))
             {
-                types
-                .Single(t => t.Key == "ImportAttribute")
-                .ToList()
-                .ForEach(t => AddType(t));
+                foreach (var type in types.Single(t => t.Key == "ImportAttribute"))
+                {
+                    AddType(type);
+                }
             }
         }
 
