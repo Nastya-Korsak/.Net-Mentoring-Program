@@ -21,7 +21,7 @@ namespace Task1
 
             if (_assemblies.Contains(assembly))
             {
-                throw new DuplicateWaitObjectException(nameof(assembly), "This assembly is already added");
+                throw new ArgumentException(nameof(assembly), "This assembly is already added");
             }
 
             _assemblies.Add(assembly);
@@ -32,24 +32,36 @@ namespace Task1
                 (CheckTypeOnImportConstructorAttribute(type) || CheckTypeOnImportAttribute(type)) ? "ImportAttribute" : string.Empty)
                 .ToList();
 
-            var typesWithExportAttribute = types
-                .Single(t => t.Key == "ExportAttribute")
-                .GroupBy(t => ((ExportAttribute)t.GetCustomAttribute(typeof(ExportAttribute))).Contract == null);
+            if (types.Any(t => t.Key == "ExportAttribute"))
+            {
+                var typesWithExportAttribute = types
+                    .Single(t => t.Key == "ExportAttribute")
+                    .GroupBy(t => ((ExportAttribute)t.GetCustomAttribute(typeof(ExportAttribute))).Contract == null);
 
-            typesWithExportAttribute
-                .Single(t => t.Key == true)
-                .ToList()
-                .ForEach(t => AddType(t));
+                if (typesWithExportAttribute.Any(t => t.Key == true))
+                {
+                    typesWithExportAttribute
+                    .Single(t => t.Key == true)
+                    .ToList()
+                    .ForEach(t => AddType(t));
+                }
 
-            typesWithExportAttribute
-                .Single(t => t.Key == false)
-                .ToList()
-                .ForEach(t => AddType(t, ((ExportAttribute)t.GetCustomAttribute(typeof(ExportAttribute))).Contract));
+                if (typesWithExportAttribute.Any(t => t.Key == false))
+                {
+                    typesWithExportAttribute
+                    .Single(t => t.Key == false)
+                    .ToList()
+                    .ForEach(t => AddType(t, ((ExportAttribute)t.GetCustomAttribute(typeof(ExportAttribute))).Contract));
+                }
+            }
 
-            types
+            if (types.Any(t => t.Key == "ImportAttribute"))
+            {
+                types
                 .Single(t => t.Key == "ImportAttribute")
                 .ToList()
                 .ForEach(t => AddType(t));
+            }
         }
 
         public void AddType(Type type)
