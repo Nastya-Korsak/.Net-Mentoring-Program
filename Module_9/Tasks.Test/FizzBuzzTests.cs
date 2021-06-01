@@ -74,9 +74,9 @@ namespace Tasks.Test
         [TestCase(101)]
         public void NumberHandler_NumberOutsideRangeOf1To100_ArgumentOutOfRangeException(int number)
         {
-            Func<string> numberHandler = _fizzBuzz.NumberHandler(number);
+            Action act = () => _fizzBuzz.NumberHandler(number);
 
-            numberHandler.Should().Throw<ArgumentOutOfRangeException>();
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
