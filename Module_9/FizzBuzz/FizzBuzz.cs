@@ -6,7 +6,7 @@ namespace FizzBuzz
 {
     public class FizzBuzz
     {
-        public string NumberHandler(int number)
+        public string HandleNumber(int number)
         {
             if (number < 1 || number > 100)
             {
@@ -39,7 +39,7 @@ namespace FizzBuzz
 
             for (int i = 1; i <= 100; i++)
             {
-                listOfHandledNumbers.Add(NumberHandler(i));
+                listOfHandledNumbers.Add(HandleNumber(i));
             }
 
             return listOfHandledNumbers;

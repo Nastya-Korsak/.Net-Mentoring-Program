@@ -24,7 +24,7 @@ namespace Tasks.Test
         {
             var expectedValue = "Fizz";
 
-            var returnedValue = _fizzBuzz.NumberHandler(number);
+            var returnedValue = _fizzBuzz.HandleNumber(number);
 
             returnedValue.Should().Be(expectedValue);
         }
@@ -37,7 +37,7 @@ namespace Tasks.Test
         {
             var expectedValue = "Buzz";
 
-            var returnedValue = _fizzBuzz.NumberHandler(number);
+            var returnedValue = _fizzBuzz.HandleNumber(number);
 
             returnedValue.Should().Be(expectedValue);
         }
@@ -50,7 +50,7 @@ namespace Tasks.Test
         {
             var expectedValue = "FizzBuzz";
 
-            var returnedValue = _fizzBuzz.NumberHandler(number);
+            var returnedValue = _fizzBuzz.HandleNumber(number);
 
             returnedValue.Should().Be(expectedValue);
         }
@@ -63,7 +63,7 @@ namespace Tasks.Test
         {
             var expectedValue = number.ToString();
 
-            var returnedValue = _fizzBuzz.NumberHandler(number);
+            var returnedValue = _fizzBuzz.HandleNumber(number);
 
             returnedValue.Should().Be(expectedValue);
         }
@@ -73,7 +73,7 @@ namespace Tasks.Test
         [TestCase(101)]
         public void NumberHandler_NumberOutsideRangeOf1To100_ArgumentOutOfRangeException(int number)
         {
-            Action act = () => _fizzBuzz.NumberHandler(number);
+            Action act = () => _fizzBuzz.HandleNumber(number);
 
             act.Should().Throw<ArgumentOutOfRangeException>();
         }
@@ -91,7 +91,7 @@ namespace Tasks.Test
 
                 foreach (var value in resultList)
                 {
-                    resultList[i].Should().Be(_fizzBuzz.NumberHandler(i + 1));
+                    resultList[i].Should().Be(_fizzBuzz.HandleNumber(i + 1));
                     i++;
                 }
             }
