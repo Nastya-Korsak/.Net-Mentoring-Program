@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FizzBuzz;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
@@ -92,7 +91,7 @@ namespace Tasks.Test
 
                 foreach (var value in resultList)
                 {
-                    resultList[i].Should().Be(_fizzBuzz.NumberHandler(i));
+                    resultList[i].Should().Be(_fizzBuzz.NumberHandler(i + 1));
                     i++;
                 }
             }

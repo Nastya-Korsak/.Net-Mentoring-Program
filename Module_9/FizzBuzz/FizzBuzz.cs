@@ -15,12 +15,12 @@ namespace FizzBuzz
 
             var returnedValue = new StringBuilder();
 
-            if (isNumberDivisibleBy3(number))
+            if (IsNumberDivisibleBy3(number))
             {
                 returnedValue.Append("Fizz");
             }
 
-            if (isNumberDivisibleBy5(number))
+            if (IsNumberDivisibleBy5(number))
             {
                 returnedValue.Append("Buzz");
             }
@@ -35,15 +35,22 @@ namespace FizzBuzz
 
         public List<string> GetNumbers()
         {
-            throw new NotImplementedException();
+            var listOfHandledNumbers = new List<string>();
+
+            for (int i = 1; i <=100; i++)
+            {
+                listOfHandledNumbers.Add(NumberHandler(i));
+            }
+
+            return listOfHandledNumbers;
         }
 
-        private bool isNumberDivisibleBy3(int number)
+        private bool IsNumberDivisibleBy3(int number)
         {
             return number % 3 == 0;
         }
 
-        private bool isNumberDivisibleBy5(int number)
+        private bool IsNumberDivisibleBy5(int number)
         {
             return number % 5 == 0;
         }
