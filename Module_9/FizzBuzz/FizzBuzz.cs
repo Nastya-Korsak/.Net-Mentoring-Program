@@ -37,7 +37,7 @@ namespace FizzBuzz
         {
             var listOfHandledNumbers = new List<string>();
 
-            for (int i = 1; i <=100; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 listOfHandledNumbers.Add(NumberHandler(i));
             }
