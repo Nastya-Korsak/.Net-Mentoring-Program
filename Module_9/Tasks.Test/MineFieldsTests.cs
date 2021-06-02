@@ -65,7 +65,7 @@ namespace MineFields
         }
 
         [Test]
-        public void GetHintField_Null_NullReferencException()
+        public void GetHintField_Null_ArgumentNullException()
         {
             Action act = () => _mineField.GetHintField(null);
 
