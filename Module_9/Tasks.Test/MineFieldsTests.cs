@@ -31,8 +31,8 @@ namespace MineFields
         public void Setup()
         {
             _mineField = new MineField();
-            _mineFieldRows = _newMineField.GetUpperBound(0) + 1;
-            _mineFieldColumns = _newMineField.Length / _mineFieldRows;
+            _mineFieldRows = FieldHelper<MFSings>.GetRowsNumber(_newMineField);
+            _mineFieldColumns = FieldHelper<MFSings>.GetColumnsNumber(_newMineField);
         }
 
         [Test]
@@ -40,8 +40,8 @@ namespace MineFields
         {
             var actualField = _mineField.GetHintField(_newMineField);
 
-            int hintFieldRows = actualField.GetUpperBound(0) + 1;
-            int hintFieldColumns = actualField.Length / hintFieldRows;
+            int hintFieldRows = FieldHelper<string>.GetRowsNumber(actualField);
+            int hintFieldColumns = FieldHelper<string>.GetColumnsNumber(actualField);
 
             using (new AssertionScope())
             {
@@ -69,7 +69,7 @@ namespace MineFields
         {
             Action act = () => _mineField.GetHintField(null);
 
-            act.Should().Throw<NullReferenceException>();
+            act.Should().Throw<ArgumentNullException>();
         }
     }
 }
