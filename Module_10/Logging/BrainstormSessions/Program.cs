@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace BrainstormSessions
 {
@@ -15,6 +16,12 @@ namespace BrainstormSessions
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging(builder =>
+                {
+                    builder.ClearProviders();
+                    builder.AddFilter("Microsoft", LogLevel.None);
+                    builder.AddLog4Net();
                 });
     }
 }

@@ -1,0 +1,5 @@
+logparser "SELECT index, text  FROM 'log_path' " -o:datagrid - Get all logs
+logparser "SELECT index, text  FROM 'log_path' where text like '%ERROR%'" -o:datagrid - Get logs with error level
+logparser "SELECT count(text)  FROM 'log_path' where text like '%INFO%' " - count of logs with level = 'info'
+logparser "SELECT count(text)  FROM 'log_path' where text like '%DEBUG%' " - count of logs with level = 'debug'
+logparser "SELECT count(text)  FROM 'log_path' where text like '%ERROR%' " - count of logs with level = 'error'
