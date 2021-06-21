@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BrainstormSessions.Core.Interfaces;
 using BrainstormSessions.Core.Model;
 using BrainstormSessions.ViewModels;
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrainstormSessions.Controllers
@@ -12,6 +13,7 @@ namespace BrainstormSessions.Controllers
     public class HomeController : Controller
     {
         private readonly IBrainstormSessionRepository _sessionRepository;
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
 
         public HomeController(IBrainstormSessionRepository sessionRepository)
         {
@@ -20,6 +22,8 @@ namespace BrainstormSessions.Controllers
 
         public async Task<IActionResult> Index()
         {
+            _logger.Debug("Start of Index Method execution");
+
             var sessionList = await _sessionRepository.ListAsync();
 
             var model = sessionList.Select(session => new StormSessionViewModel()
@@ -29,6 +33,10 @@ namespace BrainstormSessions.Controllers
                 Name = session.Name,
                 IdeaCount = session.Ideas.Count
             });
+
+            _logger.Info("Model is created");
+
+            _logger.Debug("Finish of Index Method execution");
 
             return View(model);
         }
@@ -42,8 +50,12 @@ namespace BrainstormSessions.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(NewSessionModel model)
         {
+            _logger.Debug($"Start of Index Method execution with model {model.SessionName}");
+
             if (!ModelState.IsValid)
             {
+                _logger.Warn("ModelState is not valid");
+
                 return BadRequest(ModelState);
             }
             else
@@ -54,6 +66,8 @@ namespace BrainstormSessions.Controllers
                     Name = model.SessionName
                 });
             }
+
+            _logger.Debug($"Finish of Index Method execution with model {model.SessionName}");
 
             return RedirectToAction(actionName: nameof(Index));
         }
