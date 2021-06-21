@@ -15,12 +15,12 @@ namespace FizzBuzz
 
             var returnedValue = new StringBuilder();
 
-            if (IsNumberDivisibleBy3(number))
+            if (number % 3 == 0)
             {
                 returnedValue.Append("Fizz");
             }
 
-            if (IsNumberDivisibleBy5(number))
+            if (number % 5 == 0)
             {
                 returnedValue.Append("Buzz");
             }
@@ -43,16 +43,6 @@ namespace FizzBuzz
             }
 
             return listOfHandledNumbers;
-        }
-
-        private bool IsNumberDivisibleBy3(int number)
-        {
-            return number % 3 == 0;
-        }
-
-        private bool IsNumberDivisibleBy5(int number)
-        {
-            return number % 5 == 0;
         }
     }
 }

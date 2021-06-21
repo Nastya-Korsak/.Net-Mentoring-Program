@@ -5,6 +5,15 @@ namespace HarryPotter
 {
     public class Bookstore : IBookstore
     {
+        private readonly double _costOfOneBook = 8;
+        private readonly Dictionary<double, double> _typesBooksAndDscount = new ()
+        {
+            { 5, 0.25 },
+            { 4, 0.2 },
+            { 3, 0.1 },
+            { 2, 0.05 }
+        };
+
         public double GetFinalPrice(List<Books> books)
         {
             if (books is null)
@@ -18,56 +27,31 @@ namespace HarryPotter
 
             double finallyPrice = 0;
 
-            finallyPrice += otherBooks * 8;
+            finallyPrice += otherBooks * _costOfOneBook;
 
-            while (harryPotterBooks.All(v => v.Value > 0))
-            {
-                finallyPrice += (5.0 * 8.0) - (5.0 * 8.0 * 0.25);
-                foreach (var v in harryPotterBooks)
-                {
-                    harryPotterBooks[v.Key] -= 1;
-                }
-            }
+            var countOfharryPotterBooksDifferentTypes = 5;
 
-            while (harryPotterBooks.Count(v => v.Value > 0) == 4)
+            while (countOfharryPotterBooksDifferentTypes != 1)
             {
-                finallyPrice += (4.0 * 8.0) - (4.0 * 8.0 * 0.2);
-                foreach (var v in harryPotterBooks)
+                while (harryPotterBooks.Count(v => v.Value > 0) == countOfharryPotterBooksDifferentTypes)
                 {
-                    if (harryPotterBooks[v.Key] > 0)
+                    finallyPrice += (countOfharryPotterBooksDifferentTypes * _costOfOneBook)
+                        - (countOfharryPotterBooksDifferentTypes * _costOfOneBook * _typesBooksAndDscount[countOfharryPotterBooksDifferentTypes]);
+                    foreach (var v in harryPotterBooks)
                     {
-                        harryPotterBooks[v.Key] -= 1;
+                        if (harryPotterBooks[v.Key] > 0)
+                        {
+                            harryPotterBooks[v.Key] -= 1;
+                        }
                     }
                 }
-            }
 
-            while (harryPotterBooks.Count(v => v.Value > 0) == 3)
-            {
-                finallyPrice += (3.0 * 8.0) - (3.0 * 8.0 * 0.1);
-                foreach (var v in harryPotterBooks)
-                {
-                    if (harryPotterBooks[v.Key] > 0)
-                    {
-                        harryPotterBooks[v.Key] -= 1;
-                    }
-                }
-            }
-
-            while (harryPotterBooks.Count(v => v.Value > 0) == 2)
-            {
-                finallyPrice += (2.0 * 8.0) - (2.0 * 8.0 * 0.05);
-                foreach (var v in harryPotterBooks)
-                {
-                    if (harryPotterBooks[v.Key] > 0)
-                    {
-                        harryPotterBooks[v.Key] -= 1;
-                    }
-                }
+                countOfharryPotterBooksDifferentTypes--;
             }
 
             foreach (var v in harryPotterBooks)
             {
-                finallyPrice += harryPotterBooks[v.Key] * 8;
+                finallyPrice += harryPotterBooks[v.Key] * _costOfOneBook;
             }
 
             return finallyPrice;
@@ -87,25 +71,9 @@ namespace HarryPotter
 
             foreach (var book in books)
             {
-                if (book == Books.HarryPotter1)
+                if (harryPotterBooks.ContainsKey(book))
                 {
-                    harryPotterBooks[Books.HarryPotter1] += 1;
-                }
-                else if (book == Books.HarryPotter2)
-                {
-                    harryPotterBooks[Books.HarryPotter2] += 1;
-                }
-                else if (book == Books.HarryPotter3)
-                {
-                    harryPotterBooks[Books.HarryPotter3] += 1;
-                }
-                else if (book == Books.HarryPotter4)
-                {
-                    harryPotterBooks[Books.HarryPotter4] += 1;
-                }
-                else if (book == Books.HarryPotter5)
-                {
-                    harryPotterBooks[Books.HarryPotter5] += 1;
+                    harryPotterBooks[book] += 1;
                 }
                 else
                 {

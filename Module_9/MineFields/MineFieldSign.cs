@@ -1,6 +1,6 @@
 ﻿namespace MineFields
 {
-    public enum MFSings
+    public enum MineFieldSign
     {
         Star,
         Point

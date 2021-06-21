@@ -7,11 +7,11 @@ namespace MineFields
 {
     public class MineFieldsTests
     {
-        private readonly MFSings[,] _newMineField =
+        private readonly MineFieldSign[,] _newMineField =
         {
-            { MFSings.Star, MFSings.Point, MFSings.Point, MFSings.Point },
-            { MFSings.Point, MFSings.Point, MFSings.Star, MFSings.Point },
-            { MFSings.Point, MFSings.Point, MFSings.Point, MFSings.Point }
+            { MineFieldSign.Star, MineFieldSign.Point, MineFieldSign.Point, MineFieldSign.Point },
+            { MineFieldSign.Point, MineFieldSign.Point, MineFieldSign.Star, MineFieldSign.Point },
+            { MineFieldSign.Point, MineFieldSign.Point, MineFieldSign.Point, MineFieldSign.Point }
         };
 
         private readonly string[,] _expectedField =
@@ -31,8 +31,8 @@ namespace MineFields
         public void Setup()
         {
             _mineField = new MineField();
-            _mineFieldRows = FieldHelper<MFSings>.GetRowsNumber(_newMineField);
-            _mineFieldColumns = FieldHelper<MFSings>.GetColumnsNumber(_newMineField);
+            _mineFieldRows = FieldHelper<MineFieldSign>.GetRowsNumber(_newMineField);
+            _mineFieldColumns = FieldHelper<MineFieldSign>.GetColumnsNumber(_newMineField);
         }
 
         [Test]

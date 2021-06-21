@@ -4,6 +4,6 @@ namespace HarryPotter
 {
     public interface IBookstore
     {
-        public double GetFinalPrice(List<Books> books);
+        double GetFinalPrice(List<Books> books);
     }
 }
