@@ -16,7 +16,7 @@ namespace Tasks
         {
             if (_itemsList.Length == 0)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Item list doesn't contain items");
             }
 
             return _itemsList.RemoveAt(0);
@@ -31,7 +31,7 @@ namespace Tasks
         {
             if (_itemsList.Length == 0)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Item list doesn't contain items");
             }
 
             return _itemsList.RemoveAt(_itemsList.Length - 1);

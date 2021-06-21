@@ -9,8 +9,6 @@ namespace Tasks
     {
         private readonly DoubleNode<T> _sentinelNode;
 
-        private int _size = 0;
-
         public DoublyLinkedList()
         {
             _sentinelNode = new DoubleNode<T>(default(T));
@@ -18,11 +16,11 @@ namespace Tasks
             _sentinelNode.NextNode = _sentinelNode;
         }
 
-        public int Length => _size;
+        public int Length { get; private set; }
 
-        public void Add(T e)
+        public void Add(T item)
         {
-            var newNode = new DoubleNode<T>(e)
+            var newNode = new DoubleNode<T>(item)
             {
                 NextNode = _sentinelNode,
                 PreviosNode = _sentinelNode.PreviosNode
@@ -31,17 +29,17 @@ namespace Tasks
             _sentinelNode.PreviosNode.NextNode = newNode;
             _sentinelNode.PreviosNode = newNode;
 
-            _size++;
+            Length++;
         }
 
-        public void AddAt(int index, T e)
+        public void AddAt(int index, T item)
         {
-            if (index > _size || index < 0)
+            if (index > Length || index < 0)
             {
                 throw new IndexOutOfRangeException("Index is out of range");
             }
 
-            var newNode = new DoubleNode<T>(e);
+            var newNode = new DoubleNode<T>(item);
             var node = GetNodeByIndex(index);
 
             newNode.NextNode = node;
@@ -50,12 +48,12 @@ namespace Tasks
             node.PreviosNode.NextNode = newNode;
             node.PreviosNode = newNode;
 
-            _size++;
+            Length++;
         }
 
         public T ElementAt(int index)
         {
-            if (index > _size - 1 || index < 0)
+            if (index > Length - 1 || index < 0)
             {
                 throw new IndexOutOfRangeException("Index is out of range");
             }
@@ -65,7 +63,7 @@ namespace Tasks
 
         public IEnumerator<T> GetEnumerator()
         {
-            return new DoublyLinkedListEnumerator<T>(_sentinelNode, _size);
+            return new DoublyLinkedListEnumerator<T>(_sentinelNode, Length);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -78,7 +76,7 @@ namespace Tasks
             var node = _sentinelNode.NextNode;
             var iteration = 0;
 
-            while (!node.Value.Equals(item) && iteration != _size - 1)
+            while (!node.Value.Equals(item) && iteration != Length - 1)
             {
                 iteration++;
                 node = node.NextNode;
@@ -89,13 +87,13 @@ namespace Tasks
                 node.PreviosNode.NextNode = node.NextNode;
                 node.NextNode.PreviosNode = node.PreviosNode;
 
-                _size--;
+                Length--;
             }
         }
 
         public T RemoveAt(int index)
         {
-            if (_size == 0 || index > _size - 1 || index < 0)
+            if (Length == 0 || index > Length - 1 || index < 0)
             {
                 throw new IndexOutOfRangeException("Index is out of range");
             }
@@ -105,7 +103,7 @@ namespace Tasks
             node.PreviosNode.NextNode = node.NextNode;
             node.NextNode.PreviosNode = node.PreviosNode;
 
-            _size--;
+            Length--;
 
             return node.Value;
         }
@@ -115,7 +113,7 @@ namespace Tasks
             int iteration = 0;
             var node = _sentinelNode.NextNode;
 
-            if (_size / 2 >= index)
+            if (Length / 2 >= index)
             {
                 while (iteration != index)
                 {
@@ -128,7 +126,7 @@ namespace Tasks
             else
             {
                 node = _sentinelNode;
-                while (iteration != _size - index)
+                while (iteration != Length - index)
                 {
                     iteration++;
                     node = _sentinelNode.PreviosNode;

@@ -6,9 +6,9 @@ namespace Tasks.DoNotChange
     {
         public int Length { get; }
 
-        void Add(T e);
+        void Add(T item);
 
-        void AddAt(int index, T e);
+        void AddAt(int index, T item);
 
         void Remove(T item);
 

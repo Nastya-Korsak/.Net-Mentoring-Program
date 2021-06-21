@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Tasks
+﻿namespace Tasks
 {
     public class DoubleNode<T>
     {
         public DoubleNode(T value)
         {
             Value = value;
-            NextNode = null;
-            PreviosNode = null;
         }
 
-        public T Value { get; set; }
+        internal T Value { get; set; }
 
-        public DoubleNode<T> PreviosNode { get; set; }
+        internal DoubleNode<T> PreviosNode { get; set; }
 
-        public DoubleNode<T> NextNode { get; set; }
+        internal DoubleNode<T> NextNode { get; set; }
     }
 }
